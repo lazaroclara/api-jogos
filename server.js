@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 const postLogin = require('./routes/postLogin');
 const jogos = require('./routes/jogos');
@@ -14,6 +15,6 @@ app.get('/', (req, res) => {
     res.send('API funcionando');
 });
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
     console.log('Servidor rodando');
 });
