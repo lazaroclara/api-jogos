@@ -1,26 +1,26 @@
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+const { Pool } = require('pg');
 
-const dbPath = path.resolve(__dirname, '../banco.db');
-
-const db = new sqlite3.Database(dbPath, (err) => {
-
-    if (err) {
-        console.log('Erro ao conectar banco');
-        console.log(err);
-    } else {
-        console.log('Banco conectado');
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
     }
 });
 
-db.run(`
+pool.query(`
     CREATE TABLE IF NOT EXISTS jogos (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         nome TEXT NOT NULL,
         tipo TEXT NOT NULL,
         nota INTEGER NOT NULL,
         review TEXT NOT NULL
     )
-`);
+`, (err) => {
+    if (err) {
+        console.log('Erro ao criar tabela:', err);
+    } else {
+        console.log('Banco conectado');
+    }
+});
 
-module.exports = db;
+module.exports = pool;
